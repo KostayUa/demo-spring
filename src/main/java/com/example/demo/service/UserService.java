@@ -4,6 +4,9 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -12,12 +15,19 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-//    public String getNameById(Integer id) {
-//        return "name" + id;
-//    }
+    public void createUser(User user) {
+        userRepository.createUser(user);
+    }
 
-    //TODO: maybe should be return Option<User>
-    public User getUserById(Integer id) {
+    public Optional<User> getUserById(Long id) {
+        Optional<User> optionalUser = userRepository.getUserById(id);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalStateException("User by id: " + id + " does not exist");
+        }
         return userRepository.getUserById(id);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.getAllUsers();
     }
 }

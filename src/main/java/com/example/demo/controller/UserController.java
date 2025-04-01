@@ -2,11 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -14,14 +16,22 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/users/{id}")
-//    public String getNameById(@PathVariable Integer id) {
-//        return userService.getNameById(id);
-//    }
+    @PostMapping
+    public ResponseEntity<String> createUser(@RequestBody User user) {
+        userService.createUser(user);
+        return ResponseEntity.ok("User created");
+    }
 
-    //TODO: maybe should be return Option<User>
-    @GetMapping("/users/{id}")
-    public User getNameById(@PathVariable Integer id) {
-        return userService.getUserById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getNameById(@PathVariable Long id) {
+        return userService.getUserById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 }

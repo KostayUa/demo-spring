@@ -1,5 +1,8 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -11,6 +14,7 @@ public class Email {
         this.value = value;
     }
 
+    @JsonCreator
     public static Email create(String value) {
         final String valueTrimmed = value.trim();
         if (isValidEmail(valueTrimmed)) {
@@ -24,6 +28,7 @@ public class Email {
         return patternEmail.matcher(value).matches();
     }
 
+    @JsonValue
     public String getValue() {
         return value;
     }

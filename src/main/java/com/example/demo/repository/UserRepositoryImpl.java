@@ -1,23 +1,37 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.Email;
 import com.example.demo.model.User;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
-    private final Map<Integer, User> userData = new HashMap<>();
 
-    public UserRepositoryImpl() {
-        userData.put(1, new User(1, "John", Email.create("jdoe@me.com")));
-        userData.put(2, new User(2, "Thomas", Email.create("thomas@me.com")));
+    private final JdbcTemplate jdbcTemplate;
+
+    public UserRepositoryImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return userData.get(id);
+    public void createUser(User user) {
+        String insertSql = "INSERT INTO users (name, email) VALUES (?, ?)";
+        jdbcTemplate.update(insertSql, user.getName(), user.getEmail());
+    }
+
+    @Override
+    public Optional<User> getUserById(Long id) {
+        String selectSql = "SELECT * FROM users WHERE id = ?";
+        return jdbcTemplate.query(selectSql, new BeanPropertyRowMapper<>(User.class), id).stream().findFirst();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        String selectAllSql = "SELECT * FROM users";
+        return jdbcTemplate.query(selectAllSql, new BeanPropertyRowMapper<>(User.class));
     }
 }
