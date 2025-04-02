@@ -5,12 +5,12 @@ import java.util.Objects;
 public class User {
     private Long id;
     private String name;
-    private String email;
+    private Email email;
 
     public User() {
     }
 
-    public User(Long id, String name, String email) {
+    public User(Long id, String name, Email email) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -24,7 +24,7 @@ public class User {
         return name;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
@@ -36,7 +36,7 @@ public class User {
         this.name = name;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 
